@@ -1,0 +1,107 @@
+canvas {
+    border: 1px solid #999;
+}
+
+#elements li div span{
+    cursor: move;
+    margin-top: 15px;
+    margin-left: 15px;
+}
+
+#elements li div span .icon{
+    position: absolute;
+}
+
+span.parameter{
+    width:500px;
+    height: 30px;
+}
+
+button{
+float:right;
+}
+
+input[type="text"]{
+width:60px;
+}
+
+.impedance span {
+    width:60px;
+}
+
+/******************************************/
+#item-list {
+    margin-left: 600px;
+}
+#jquery-ui-draggable {
+    list-style-type: none;
+    margin: 0;
+    padding: 0 5px;
+    margin-bottom: 10px;
+
+    height:120px;
+    padding: 5px 0;
+    border: 1px dashed gray;
+    border-radius: 10px;
+}
+#jquery-ui-draggable li{
+    margin: 5px;
+    padding: 5px;
+    width: 100px;
+    float:left;
+}
+
+/******************************************/
+.jquery-ui-sortable-fixed {
+    list-style-type: none;
+    margin: 0;
+    padding: 0 5px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+}
+.jquery-ui-sortable-fixed li{
+    margin: 0px 5px;
+    padding: 0px;
+    height: 60px;
+}
+
+.jquery-ui-sortable-fixed li div{
+    float:left;
+}
+
+.jquery-ui-sortable-fixed li .check-fix {
+    width: 60px;
+}
+.jquery-ui-sortable-fixed li .img {
+    width: 120px;
+}
+.jquery-ui-sortable-fixed li .parameter {
+    width: 300px;
+}
+
+/******************************************/
+.jquery-ui-sortable {
+    list-style-type: none;
+    margin: 0;
+    padding: 0 5px;
+    margin-bottom: 0px;
+}
+.jquery-ui-sortable li{
+    margin: 1px 5px;
+    padding: 0px;
+    height: 60px;
+}
+.jquery-ui-sortable li div{
+    float:left;
+}
+
+.jquery-ui-sortable li .icon {
+    float: left;
+    width: 60px;
+}
+.jquery-ui-sortable li .img {
+    width: 120px;
+}
+.jquery-ui-sortable li .parameter {
+    width: 300px;
+}

@@ -1,0 +1,81 @@
+<html>
+    <head>
+        <title>Canvas tutorial</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+        <script src="math.min.js"></script>
+
+        <script src="main.js"></script>
+        <script src="calculator.js"></script>
+        <script src="smithChart.js"></script>
+        <link rel="stylesheet" type="text/css" href="smithChart.css">
+
+    </head>
+
+    <body onload="draw();">
+        <div style="float:left;">
+            <canvas id="tutorial" width="500" height="500" ></canvas>
+        </div>
+
+        <div id="item-list">
+            <div id="jquery-ui-draggable-connectToSortable">
+                <!--Item List -->
+                <ul id="jquery-ui-draggable" >
+                    <li class="ui-state-highlight new-element" type="cap_seri"><img src="./img/C.jpg" width="100px"></li>
+                    <li class="ui-state-highlight new-element" type="ind_seri"><img src="./img/L.jpg" width="100px"></li>
+                    <li class="ui-state-highlight new-element" type="cap_para"><img src="./img/ShuntC.jpg" width="100px"></li>
+                    <li class="ui-state-highlight new-element" type="ind_para"><img src="./img/ShuntL.jpg" width="100px"></li>
+                </ul>
+
+                <!--Source -->
+                <ul id="source" class="jquery-ui-sortable-fixed">
+                    <li class="ui-state-default fixed">
+                    <div class="check-fix">
+                            <input type="checkbox">fix
+                    </div>
+                    <div class="img">
+                        <img src="./img/Source.jpg" width*"100px" height="60px">
+                    </div>
+                    <div class="parameter">
+                            <input class="re" type="text" value="50" /> + 
+                            <input class="im" type="text" value="0" /> i
+                    </div>
+                    </li>
+                </ul>
+
+                <!--Elements -->
+                <ul id="elements" class="jquery-ui-sortable">
+                    <li class="ui-state-default">
+                    <div class="icon">
+                        <span class="ui-icon ui-icon-arrowthick-2-n-s ui-corner-all ui-state-hover"></span>
+                    </div>
+                    <div class="img">
+                        <img src="./img/dummy.jpg" width*"100px" height="60px">
+                    </div>
+                    </li>
+                </ul>
+
+                <!--Load -->
+                <ul id="load" class="jquery-ui-sortable-fixed">
+                    <li class="ui-state-default fixed">
+                    <div class="check-fix">
+                            <input type="checkbox">fix
+                    </div>
+                    <div class="img">
+                        <img src="./img/Load.jpg" width*"100px" height="60px">
+                    </div>
+                    <div class="parameter">
+                            <input class="re" type="text" value="50" /> + 
+                            <input class="im" type="text" value="0" /> i
+                    </div>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+    </body>
+
+</html>
