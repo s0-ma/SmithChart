@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta name="Keywords" content="smith, chart, software, tool, calculation, simulation"/>
+        <meta name="description" content="On-line Smith chart software." />
 
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Smith Chart</title>
+        <title>Smith Chart Calc</title>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
@@ -50,21 +52,25 @@
         </div>
         </nav>
 
+        <div class="container theme-showcase" role="main">
 
 
 
         <div style="float:left;">
-            <canvas id="tutorial" width="500" height="500" ></canvas>
+            <canvas id="tutorial" width="450" height="450" ></canvas>
         </div>
 
         <div id="item-list">
             <div id="jquery-ui-draggable-connectToSortable">
                 <!--Item List -->
                 <ul id="jquery-ui-draggable" >
-                    <li class="ui-state-highlight new-element" type="cap_seri"><img src="./img/C.jpg" width="100px"></li>
-                    <li class="ui-state-highlight new-element" type="ind_seri"><img src="./img/L.jpg" width="100px"></li>
-                    <li class="ui-state-highlight new-element" type="cap_para"><img src="./img/ShuntC.jpg" width="100px"></li>
-                    <li class="ui-state-highlight new-element" type="ind_para"><img src="./img/ShuntL.jpg" width="100px"></li>
+                    <li class="ui-state-highlight new-element" type="cap_seri"><img src="./img/C.jpg"               width="70px"></li>
+                    <li class="ui-state-highlight new-element" type="ind_seri"><img src="./img/L.jpg"               width="70px"></li>
+                    <li class="ui-state-highlight new-element" type="cap_para"><img src="./img/ShuntC.jpg"          width="70px"></li>
+                    <li class="ui-state-highlight new-element" type="ind_para"><img src="./img/ShuntL.jpg"          width="70px"></li>
+                    <li class="ui-state-highlight new-element" type="tl_para_open"><img src="./img/ShuntTL_Open.jpg"   width="70px"></li>
+                    <li class="ui-state-highlight new-element" type="tl_para_short"><img src="./img/ShuntTL_Short.jpg"  width="70px"></li>
+                    <li class="ui-state-highlight new-element" type="tl_seri">  <img src="./img/TL.jpg"             width="70px"></li>
                 </ul>
 
                 <!--Source -->
@@ -114,6 +120,7 @@
             </div>
         </div>
 
+    </div>
     </body>
 
 </html>

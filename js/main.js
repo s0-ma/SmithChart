@@ -54,21 +54,39 @@ function updateSmithChartData(){
             break;
         }
 
-        var val = $(elements.children[i]).children(".parameter").children("input").val()
-        val = val * getUnitFactor($(elements.children[i]).children(".parameter"))
+        if(type.startsWith("cap") || type.startsWith("ind")){
+            var val = $(elements.children[i]).children(".parameter").children("input").val()
+            val = val * getUnitFactor($(elements.children[i]).children(".parameter"))
 
-        if(type=="cap_seri"){
-            pImp1.push(CapSeri(pImp1[pImp1.length-1],f,val))
-            pTrack1.push(ELEMENT[(""+type).toUpperCase()])
-        }else if(type=="cap_para"){
-            pImp1.push(CapPara(pImp1[pImp1.length-1],f,val))
-            pTrack1.push(ELEMENT[(""+type).toUpperCase()])
-        }else if(type=="ind_seri"){
-            pImp1.push(IndSeri(pImp1[pImp1.length-1],f,val))
-            pTrack1.push(ELEMENT[(""+type).toUpperCase()])
-        }else if(type=="ind_para"){
-            pImp1.push(IndPara(pImp1[pImp1.length-1],f,val))
-            pTrack1.push(ELEMENT[(""+type).toUpperCase()])
+            if(type=="cap_seri"){
+                pImp1.push(CapSeri(pImp1[pImp1.length-1],f,val))
+                pTrack1.push(ELEMENT[(""+type).toUpperCase()])
+            }else if(type=="cap_para"){
+                pImp1.push(CapPara(pImp1[pImp1.length-1],f,val))
+                pTrack1.push(ELEMENT[(""+type).toUpperCase()])
+            }else if(type=="ind_seri"){
+                pImp1.push(IndSeri(pImp1[pImp1.length-1],f,val))
+                pTrack1.push(ELEMENT[(""+type).toUpperCase()])
+            }else if(type=="ind_para"){
+                pImp1.push(IndPara(pImp1[pImp1.length-1],f,val))
+                pTrack1.push(ELEMENT[(""+type).toUpperCase()])
+            }
+
+        }else if(type.startsWith("tl")){
+            var tmp = $(elements.children[i]).children(".parameter").children("input")
+            var imp = math.complex($(tmp[0]).val(), 0)
+            var phase = $(tmp[1]).val()
+
+            if(type=="tl_seri"){
+                pImp1.push(TlSeri(pImp1[pImp1.length-1],imp,phase))
+                pTrack1.push(ELEMENT[(""+type).toUpperCase()])
+            }else if(type=="tl_para_open"){
+                pImp1.push(TlParaOpen(pImp1[pImp1.length-1],imp,phase))
+                pTrack1.push(ELEMENT[(""+type).toUpperCase()])
+            }else if(type=="tl_para_short"){
+                pImp1.push(TlParaShort(pImp1[pImp1.length-1],imp,phase))
+                pTrack1.push(ELEMENT[(""+type).toUpperCase()])
+            }
         }
     }
 
@@ -84,22 +102,40 @@ function updateSmithChartData(){
             break
         }
 
-        var val = $(elements.children[i]).children(".parameter").children("input").val()
-        val = val * getUnitFactor($(elements.children[i]).children(".parameter"))
+        if(type.startsWith("cap") || type.startsWith("ind")){
+            var val = $(elements.children[i]).children(".parameter").children("input").val()
+            val = val * getUnitFactor($(elements.children[i]).children(".parameter"))
 
-        //注意 逆算した値を考えるので、演算は逆
-        if(type=="cap_seri"){
-            pImp2.push(CapSeri(pImp2[pImp2.length-1],-f,val))
-            pTrack2.push(ELEMENT[("IND_SERI").toUpperCase()])
-        }else if(type=="cap_para"){
-            pImp2.push(CapPara(pImp2[pImp2.length-1],-f,val))
-            pTrack2.push(ELEMENT[("IND_PARA").toUpperCase()])
-        }else if(type=="ind_seri"){
-            pImp2.push(IndSeri(pImp2[pImp2.length-1],-f,val))
-            pTrack2.push(ELEMENT[("CAP_SERI").toUpperCase()])
-        }else if(type=="ind_para"){
-            pImp2.push(IndPara(pImp2[pImp2.length-1],-f,val))
-            pTrack2.push(ELEMENT[("CAP_PARA").toUpperCase()])
+            //注意 逆算した値を考えるので、演算は逆
+            if(type=="cap_seri"){
+                pImp2.push(CapSeri(pImp2[pImp2.length-1],-f,val))
+                pTrack2.push(ELEMENT[("IND_SERI").toUpperCase()])
+            }else if(type=="cap_para"){
+                pImp2.push(CapPara(pImp2[pImp2.length-1],-f,val))
+                pTrack2.push(ELEMENT[("IND_PARA").toUpperCase()])
+            }else if(type=="ind_seri"){
+                pImp2.push(IndSeri(pImp2[pImp2.length-1],-f,val))
+                pTrack2.push(ELEMENT[("CAP_SERI").toUpperCase()])
+            }else if(type=="ind_para"){
+                pImp2.push(IndPara(pImp2[pImp2.length-1],-f,val))
+                pTrack2.push(ELEMENT[("CAP_PARA").toUpperCase()])
+            }
+
+        }else if(type.startsWith("tl")){
+            var tmp = $(elements.children[i]).children(".parameter").children("input")
+            var imp = math.complex($(tmp[0]).val(), 0)
+            var phase = $(tmp[1]).val()
+
+            if(type=="tl_seri"){
+                pImp2.push(TlSeri(pImp2[pImp2.length-1],imp,-phase))
+                pTrack2.push(ELEMENT["C_CLOCKWISE"])
+            }else if(type=="tl_para_open"){
+                pImp2.push(TlParaOpen(pImp2[pImp2.length-1],imp,-phase))
+                pTrack2.push(ELEMENT["C_CLOCKWISE"])
+            }else if(type=="tl_para_short"){
+                pImp2.push(TlParaShort(pImp2[pImp2.length-1],imp,-phase))
+                pTrack2.push(ELEMENT["CLOCKWISE"])
+            }
         }
     }
 
@@ -198,43 +234,59 @@ function onElementItemAdded(obj, type){
              +'       <div class="img">                                                                                   '
 
     if(type=="cap_seri"){
-        ret += '        <img src="./img/C.jpg" width*"100px" height="60px">                                                     '
+        ret += '        <img src="./img/C.jpg" width="100px" height="60px">                                                     '
     }else if(type=="cap_para"){
-        ret += '        <img src="./img/ShuntC.jpg" width*"100px" height="60px">                                                     '
+        ret += '        <img src="./img/ShuntC.jpg" width="100px" height="60px">                                                     '
     }else if(type=="ind_seri"){
-        ret += '        <img src="./img/L.jpg" width*"100px" height="60px">                                                     '
+        ret += '        <img src="./img/L.jpg" width="100px" height="60px">                                                     '
     }else if(type=="ind_para"){
-        ret += '        <img src="./img/ShuntL.jpg" width*"100px" height="60px">                                                     '
+        ret += '        <img src="./img/ShuntL.jpg" width="100px" height="60px">                                                     '
+
+    }else if(type=="tl_para_open"){
+        ret += '        <img src="./img/ShuntTL_Open.jpg" width="100px" height="60px">                                                     '
+    }else if(type=="tl_para_short"){
+        ret += '        <img src="./img/ShuntTL_Short.jpg" width="100px" height="60px">                                                     '
+    }else if(type=="tl_seri"){
+        ret += '        <img src="./img/TL.jpg" width="100px" height="60px">                                                     '
     }
 
-    ret +=  '    </div>                                                                                                      '
-           +'    <div class="parameter">                                                                                     '
-           +'            <input id="" type="text" value="1" />                                                           '
-           +'            <br>                                                                                                '
-           +'            <form>                                                                                                '
-           +'            <div class="unit">                                                                                     '
+    if(type=="cap_seri" || type=="cap_para" || type=="ind_seri" || type=="ind_para"){
+        ret +=  '    </div>                                                                                                      '
+        +'    <div class="parameter">                                                                                     '
+        +'            <input type="text" value="1" />                                                           '
+        +'            <br>                                                                                                '
+        +'            <form>                                                                                                '
+        +'            <div class="unit">                                                                                     '
 
-    if(type=="cap_seri" || type=="cap_para"){
-        ret +='                <input type="radio" name="unit" value="1e0" /><label>F</label>                    '
-             +'                <input type="radio" name="unit" value="1e-3" /><label>mF</label>                   '
-             +'                <input type="radio" name="unit" value="1e-6" /><label>uF</label>                   '
-             +'                <input type="radio" name="unit" value="1e-9"/><label>nF</label> '
-             +'                <input type="radio" name="unit" value="1e-12" checked="checked" /><label>pF</label> '
-    }else if(type=="ind_seri" || type=="ind_para"){
-        ret +='                <input type="radio" name="unit" value="1e0" /><label>H</label>                    '
-             +'                <input type="radio" name="unit" value="1e-3" /><label>mH</label>                   '
-             +'                <input type="radio" name="unit" value="1e-6" /><label>uH</label>                   '
-             +'                <input type="radio" name="unit" value="1e-9" checked="checked" /><label>nH</label> '
+        if(type=="cap_seri" || type=="cap_para"){
+            ret +='                <input type="radio" name="unit" value="1e0" /><label>F</label>                    '
+            +'                <input type="radio" name="unit" value="1e-3" /><label>mF</label>                   '
+            +'                <input type="radio" name="unit" value="1e-6" /><label>uF</label>                   '
+            +'                <input type="radio" name="unit" value="1e-9"/><label>nF</label> '
+            +'                <input type="radio" name="unit" value="1e-12" checked="checked" /><label>pF</label> '
+        }else if(type=="ind_seri" || type=="ind_para"){
+            ret +='                <input type="radio" name="unit" value="1e0" /><label>H</label>                    '
+            +'                <input type="radio" name="unit" value="1e-3" /><label>mH</label>                   '
+            +'                <input type="radio" name="unit" value="1e-6" /><label>uH</label>                   '
+            +'                <input type="radio" name="unit" value="1e-9" checked="checked" /><label>nH</label> '
+        }
+        ret +=  '            </div>                                                                                              '
+        +'            </form>                                                                                                '
+        +'    </div>                                                                                                      '
+
+    }else if(type=="tl_para_open"||type=="tl_para_short"||type=="tl_seri" ){
+        ret +=  '    </div>                                                                                                      '
+        +'    <div class="parameter">                                                                                     '
+        +'            <input class="imp" type="text" value="50" /> Ohm,                                                            '
+        +'            <input class="phase" type="text" value="45" /> Deg                                                          '
+        +'    </div>                                                                                                    '
     }
 
-    ret +=  '            </div>                                                                                              '
-           +'            </form>                                                                                                '
-           +'    </div>                                                                                                      '
-           +'    <div class="impedance">                                                                 '
-           +'        <span class="re">0</span> + i                                                             '
-           +'        <span class="im">0</span>                                                              '
-           +'    </div>                                                                                                      '
-           +'    <button>x</button>                                                                                          '
+    ret +='    <div class="impedance">                                                                 '
+    +'        <span class="re">0</span> + i                                                             '
+    +'        <span class="im">0</span>                                                              '
+    +'    </div>                                                                                                      '
+    +'    <button>x</button>                                                                                          '
 
     obj.append(ret)
 
@@ -256,16 +308,17 @@ function makeTextBoxControllable(textbox,callback){
             if(e.which==38){
                 //up
                 var ret = parseFloat($(textbox).val()) * 1.1
+                $(textbox).val(ret.toPrecision(3))
             }else if(e.which==40){
                 //down
                 var ret = parseFloat($(textbox).val()) / 1.1
+                $(textbox).val(ret.toPrecision(3))
             }else if(e.which==13){
                 //enter
             }else{
                 return
             }
 
-            $(textbox).val(ret.toPrecision(3))
             cb()
         })
 }

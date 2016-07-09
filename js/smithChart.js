@@ -7,8 +7,8 @@ var ELEMENT = {
     CAP_PARA:       2,
     IND_SERI:       2,
     IND_PARA:       1,
-    TL_SERI:        1,
-    TL_PARA_OPEN:   1,
+    TL_SERI:        2,
+    TL_PARA_OPEN:   2,
     TL_PARA_SHORT:  1
 }
 
@@ -23,8 +23,8 @@ function SmithChart(canvas){
 
     //displaySetting
     self.chart_r = 200
-    self.center_x = 250
-    self.center_y = 250
+    self.center_x = 225
+    self.center_y = 205
 
     //setting
     self.showQ = false;
@@ -256,8 +256,10 @@ function SmithChart(canvas){
 
             self.ctx.font = "16pt Arial";
             self.ctx.textAlign = "center";
-            self.ctx.clearRect( 300, 480, 500, 500);
-            self.ctx.fillText(""+z.re.toPrecision(3)+" "+ z.im.toPrecision(3), 400 , 500)
+            var x = 380
+            var y = 420
+            self.ctx.clearRect( x-90, y-18,  180,20);
+            self.ctx.fillText(""+z.re.toPrecision(3)+" "+ z.im.toPrecision(3), x,y)
         }
 
         self.canvas.addEventListener('mousemove', showMousePosition, false);
