@@ -1,3 +1,14 @@
+@charset "UTF-8";
+
+body{
+font-family: 'メイリオ', 'Hiragino Kaku Gothic Pro', sans-serif;
+}
+
+/*　ナビゲーションバー　navbar-static */
+.menu{
+    margin: 0
+}
+
 canvas {
     border: 1px solid #999;
 }
@@ -18,11 +29,11 @@ span.parameter{
 }
 
 button{
-float:right;
+    float:right;
 }
 
 input[type="text"]{
-width:60px;
+    width:60px;
 }
 
 .impedance span {
@@ -62,7 +73,7 @@ width:60px;
 .jquery-ui-sortable-fixed li{
     margin: 0px 5px;
     padding: 0px;
-    height: 60px;
+    height: 62px;
 }
 
 .jquery-ui-sortable-fixed li div{
@@ -89,7 +100,8 @@ width:60px;
 .jquery-ui-sortable li{
     margin: 1px 5px;
     padding: 0px;
-    height: 60px;
+    height: 63px;
+    vertical-align: middle;
 }
 .jquery-ui-sortable li div{
     float:left;

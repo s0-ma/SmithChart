@@ -1,35 +1,16 @@
 var smith;
 
-$( function() {
-    initSortable()
-    initElementTextBox()
+$(document).ready(function() {
+    init()
 } );
 
-function draw(){
+function init(){
+    initSortable()
+    initElementTextBox()
+
     var canvas = document.getElementById('tutorial');
+
     if (canvas.getContext){
-
-//        pImp = new Array();
-//        pTrack = new Array();
-//
-//        pImp.push(math.complex(16,30))
-//        pTrack.push(ELEMENT["NONE"])
-//
-//        pImp.push(CapSeri(pImp[0], 1e9, 2.98e-12))
-//        pTrack.push(ELEMENT["CAP_SERI"])
-//
-//        pImp.push(IndPara(pImp[1], 1e9, 5.5e-9))
-//        pTrack.push(ELEMENT["IND_PARA"])
-//
-//        pImp2 = new Array();
-//        pTrack2 = new Array();
-//
-//        pImp2.push(math.complex(16,-30))
-//        pTrack2.push(ELEMENT["NONE"])
-//
-//        pImp2.push(CapSeri(pImp2[0], 1e9, 2.98e-12))
-//        pTrack2.push(ELEMENT["CAP_SERI"])
-
         var canvas = document.getElementById('tutorial');
         if (canvas.getContext){
             var ctx = canvas.getContext('2d');
@@ -37,14 +18,9 @@ function draw(){
             //smith.registerMouseAction()
             smith.registerCursorAction()
             smith.addOptionInterface()
-//            smith.points1 = pImp
-//            smith.tracks1 = pTrack
-//            smith.points2 = pImp2
-//            smith.tracks2 = pTrack2
 
             update()
             smith.redraw()
-
         }
     }
 
@@ -74,11 +50,14 @@ function updateSmithChartData(){
     //source 側
     for(var i = 0; i<elements.children.length; i++){
         var type = $(elements.children[i]).attr("type")
-        var val = $(elements.children[i]).children(".parameter").children("input").val()
-
         if(type===undefined){
             break;
-        }else if(type=="cap_seri"){
+        }
+
+        var val = $(elements.children[i]).children(".parameter").children("input").val()
+        val = val * getUnitFactor($(elements.children[i]).children(".parameter"))
+
+        if(type=="cap_seri"){
             pImp1.push(CapSeri(pImp1[pImp1.length-1],f,val))
             pTrack1.push(ELEMENT[(""+type).toUpperCase()])
         }else if(type=="cap_para"){
@@ -101,12 +80,15 @@ function updateSmithChartData(){
 
     for(var i = elements.children.length - 1; i>=0; i--){
         var type = $(elements.children[i]).attr("type")
-        var val = $(elements.children[i]).children(".parameter").children("input").val()
-
-        //注意 逆算した値を考えるので、演算は逆
         if(type===undefined){
             break
-        }else if(type=="cap_seri"){
+        }
+
+        var val = $(elements.children[i]).children(".parameter").children("input").val()
+        val = val * getUnitFactor($(elements.children[i]).children(".parameter"))
+
+        //注意 逆算した値を考えるので、演算は逆
+        if(type=="cap_seri"){
             pImp2.push(CapSeri(pImp2[pImp2.length-1],-f,val))
             pTrack2.push(ELEMENT[("IND_SERI").toUpperCase()])
         }else if(type=="cap_para"){
@@ -126,6 +108,12 @@ function updateSmithChartData(){
 
     smith.points2 = pImp2
     smith.tracks2 = pTrack2
+}
+
+function getUnitFactor(obj){
+    var radioBtn = $(obj).children("form").children(".unit").children("input[type='radio']")
+    var checkedBtn = radioBtn.filter(":checked")
+    return checkedBtn.val()
 }
 
 function updateElementImpedance(){
@@ -188,19 +176,10 @@ function initSortable(){
 
 function initElementTextBox(){
     $("#jquery-ui-draggable-connectToSortable .parameter input").each(function(index,value){
-        $(value).unbind()
-        $(value).keydown(function(e){
-            if(e.which==38){
-                //up
-                $(value).val(parseFloat($(value).val()) * 1.1)
-            }else if(e.which==40){
-                //down
-                $(value).val(parseFloat($(value).val()) / 1.1)
-            }else if(e.which==13){
-                //enter
-            }
-            update()
-        })
+        makeTextBoxControllable(value,update)
+    })
+    $("#jquery-ui-draggable-connectToSortable .parameter form .unit input[type='radio']").change(function(){
+        update()
     })
 }
 
@@ -230,21 +209,22 @@ function onElementItemAdded(obj, type){
 
     ret +=  '    </div>                                                                                                      '
            +'    <div class="parameter">                                                                                     '
-           +'            <input id="" type="text" value="0.4e-11" />                                                           '
+           +'            <input id="" type="text" value="1" />                                                           '
            +'            <br>                                                                                                '
            +'            <form>                                                                                                '
-           +'            <div id="unit">                                                                                     '
+           +'            <div class="unit">                                                                                     '
 
     if(type=="cap_seri" || type=="cap_para"){
-        ret +='                <input type="radio" id="radio1" name="radio" /><label for="radio1">F</label>                    '
-             +'                <input type="radio" id="radio2" name="radio" /><label for="radio2">mF</label>                   '
-             +'                <input type="radio" id="radio3" name="radio" /><label for="radio3">uF</label>                   '
-             +'                <input type="radio" id="radio4" name="radio" checked="checked" /><label for="radio4">nF</label> '
+        ret +='                <input type="radio" name="unit" value="1e0" /><label>F</label>                    '
+             +'                <input type="radio" name="unit" value="1e-3" /><label>mF</label>                   '
+             +'                <input type="radio" name="unit" value="1e-6" /><label>uF</label>                   '
+             +'                <input type="radio" name="unit" value="1e-9"/><label>nF</label> '
+             +'                <input type="radio" name="unit" value="1e-12" checked="checked" /><label>pF</label> '
     }else if(type=="ind_seri" || type=="ind_para"){
-        ret +='                <input type="radio" id="radio1" name="radio" /><label for="radio1">H</label>                    '
-             +'                <input type="radio" id="radio2" name="radio" /><label for="radio2">mH</label>                   '
-             +'                <input type="radio" id="radio3" name="radio" /><label for="radio3">uH</label>                   '
-             +'                <input type="radio" id="radio4" name="radio" checked="checked" /><label for="radio4">nH</label> '
+        ret +='                <input type="radio" name="unit" value="1e0" /><label>H</label>                    '
+             +'                <input type="radio" name="unit" value="1e-3" /><label>mH</label>                   '
+             +'                <input type="radio" name="unit" value="1e-6" /><label>uH</label>                   '
+             +'                <input type="radio" name="unit" value="1e-9" checked="checked" /><label>nH</label> '
     }
 
     ret +=  '            </div>                                                                                              '
@@ -268,4 +248,24 @@ function onElementItemAdded(obj, type){
     initElementTextBox()
 }
 
+function makeTextBoxControllable(textbox,callback){
+        var cb = callback
 
+        $(textbox).unbind()
+        $(textbox).keydown(function(e){
+            if(e.which==38){
+                //up
+                var ret = parseFloat($(textbox).val()) * 1.1
+            }else if(e.which==40){
+                //down
+                var ret = parseFloat($(textbox).val()) / 1.1
+            }else if(e.which==13){
+                //enter
+            }else{
+                return
+            }
+
+            $(textbox).val(ret.toPrecision(3))
+            cb()
+        })
+}

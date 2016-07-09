@@ -1,20 +1,58 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
-        <title>Canvas tutorial</title>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Smith Chart</title>
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 
-        <script src="math.min.js"></script>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
-        <script src="main.js"></script>
-        <script src="calculator.js"></script>
-        <script src="smithChart.js"></script>
-        <link rel="stylesheet" type="text/css" href="smithChart.css">
+        <script src="js/math.min.js"></script>
+
+        <script src="js/main.js"></script>
+        <script src="js/calculator.js"></script>
+        <script src="js/smithChart.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/smithChart.css">
 
     </head>
 
-    <body onload="draw();">
+    <body>
+        <!-- Static navbar -->
+        <nav class="navbar navbar-default navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Smith Chart Calc</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#HowToUse">How to use</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://github.com/s0-ma/SmithChart">GitHub</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+        </nav>
+
+
+
+
         <div style="float:left;">
             <canvas id="tutorial" width="500" height="500" ></canvas>
         </div>
@@ -33,14 +71,14 @@
                 <ul id="source" class="jquery-ui-sortable-fixed">
                     <li class="ui-state-default fixed">
                     <div class="check-fix">
-                            <input type="checkbox">fix
+                        <input type="checkbox">fix
                     </div>
                     <div class="img">
                         <img src="./img/Source.jpg" width*"100px" height="60px">
                     </div>
                     <div class="parameter">
-                            <input class="re" type="text" value="50" /> + 
-                            <input class="im" type="text" value="0" /> i
+                        <input class="re" type="text" value="50" /> + 
+                        <input class="im" type="text" value="0" /> i
                     </div>
                     </li>
                 </ul>
@@ -52,7 +90,7 @@
                         <span class="ui-icon ui-icon-arrowthick-2-n-s ui-corner-all ui-state-hover"></span>
                     </div>
                     <div class="img">
-                        <img src="./img/dummy.jpg" width*"100px" height="60px">
+                        <img src="./img/separator.jpg" width*"100px" height="60px">
                     </div>
                     </li>
                 </ul>
@@ -61,14 +99,14 @@
                 <ul id="load" class="jquery-ui-sortable-fixed">
                     <li class="ui-state-default fixed">
                     <div class="check-fix">
-                            <input type="checkbox">fix
+                        <input type="checkbox">fix
                     </div>
                     <div class="img">
                         <img src="./img/Load.jpg" width*"100px" height="60px">
                     </div>
                     <div class="parameter">
-                            <input class="re" type="text" value="50" /> + 
-                            <input class="im" type="text" value="0" /> i
+                        <input class="re" type="text" value="50" /> + 
+                        <input class="im" type="text" value="0" /> i
                     </div>
                     </li>
                 </ul>
