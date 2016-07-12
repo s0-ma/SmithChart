@@ -29,13 +29,13 @@ function SmithChart(canvas){
     //setting
     self.showQ = false;
     self.showImpedanceChart = true;
-    self.showAdmittanceChart = true;
+    self.showAdmittanceChart = false;
     self.showQualityFactor = false;
     self.showTrack = true;
 
-    self.Z0 = 50
-    self.tics_re = [12.5, 25, 50, 100, 200]
-    self.tics_im = [12.5, 25, 50, 100, 200]
+    self.Z0 = math.complex(50,20)
+    self.tics_re = [0, 12.5, 25, 50, 100, 200]
+    self.tics_im = [-200, -100, -50, -12.5, 0, 12.5, 25, 50, 100, 200]
     self.tics_q = [1,2,5,10]
 
     //drawnObj
@@ -47,7 +47,7 @@ function SmithChart(canvas){
 
     self.impToCart = function(r,i){
         var z = math.complex(r,i)
-        var _z = z.mul(1/self.Z0);
+        var _z = z.mul(self.Z0.inverse());
         var ret = math.add(_z, -1).mul( math.add(_z, 1).inverse());
         return ret;
     }
@@ -65,52 +65,96 @@ function SmithChart(canvas){
 
     self.cartToImp = function(_z){
         var ret = math.add(_z, +1).mul( math.add(_z, -1).inverse());
-        var z = ret.mul(-self.Z0);
+        var z = ret.mul(-1).mul(self.Z0);
         return z;
     }
 
     self.drawSmithChart = function(){
-        self.ctx.beginPath();
-        self.ctx.arc(self.center_x, self.center_y, self.chart_r, 0, Math.PI*2, false);
-        self.ctx.stroke();
-
-        self.ctx.beginPath();
-        tmp = self.cartToWin(math.complex(-1,0))
-        self.ctx.moveTo(tmp[0],tmp[1]);
-        tmp = self.cartToWin(math.complex(1,0))
-        self.ctx.lineTo(tmp[0],tmp[1]);
-        self.ctx.stroke();
 
         if(self.showImpedanceChart){
             self.ctx.lineWidth = .3
 
+            //gamma-axis
+            _r = math.sqrt(self.Z0.re*self.Z0.re+self.Z0.im*self.Z0.im)/self.Z0.re
+            _x = 0
+            _y = self.Z0.im/self.Z0.re
+            r = self.cartToWin(math.complex(_r, 0))[0] - self.cartToWin(math.complex(0, 0))[0]
+            x = self.cartToWin(math.complex(_x ,0))[0]
+            y = self.cartToWin(math.complex(0, -_y))[1]
+
+            self.ctx.lineWidth = 1
+            self.ctx.beginPath();
+            self.ctx.moveTo(x-r,y);
+            self.ctx.lineTo(x+r,y);
+            self.ctx.moveTo(x,y-r);
+            self.ctx.lineTo(x,y+r);
+            self.ctx.stroke();
+            self.ctx.lineWidth = 0.3
+
+
+            //real part = const.
             self.tics_re.forEach(function(value){
-                r = self.cartToWin(math.complex(1,0))[0]
-                l = self.cartToWin(self.impToCart(value,0))[0]
-                y = self.cartToWin(self.impToCart(0,0))[1]
-                self.ctx.beginPath();
-                self.ctx.arc((r+l)/2, y, (r-l)/2, 0, Math.PI*2, false);
-                self.ctx.stroke();
+                _r = math.sqrt(self.Z0.re*self.Z0.re+self.Z0.im*self.Z0.im)/(value+self.Z0.re)
+                _x = value/(value+self.Z0.re)
+                _y = self.Z0.im/(value+self.Z0.re)
+                r = self.cartToWin(math.complex(_r, 0))[0] - self.cartToWin(math.complex(0, 0))[0]
+                x = self.cartToWin(math.complex(_x ,0))[0]
+                y = self.cartToWin(math.complex(0, -_y))[1]
+
+                if(value == 0){
+                    self.ctx.lineWidth = 1
+                    self.ctx.beginPath();
+                    self.ctx.arc(x, y, r, 0, Math.PI*2, false);
+                    self.ctx.stroke();
+                    self.ctx.lineWidth = 0.3
+                }else{
+                    self.ctx.beginPath();
+                    self.ctx.arc(x, y, r, 0, Math.PI*2, false);
+                    self.ctx.stroke();
+                }
+
             })
 
+            //imaginary part = const.
             self.tics_im.forEach(function(value){
-                z = self.impToCart(0,value)
-                phi = z.toPolar().phi
-                center = self.cartToWin(math.complex(1, math.tan(phi/2)))
-                r = self.cartToWin(math.complex(1, 0))[1] - center[1]
+                _r = math.sqrt(self.Z0.re*self.Z0.re+self.Z0.im*self.Z0.im)/(value+self.Z0.im)
+                _x = value/(value+self.Z0.im)
+                _y = -self.Z0.re/(value+self.Z0.im)
+                r = math.abs(self.cartToWin(math.complex(_r, 0))[0] - self.cartToWin(math.complex(0, 0))[0])
+                x = self.cartToWin(math.complex(_x ,0))[0]
+                y = self.cartToWin(math.complex(0, -_y))[1]
 
-                self.ctx.beginPath();
-                self.ctx.arc(center[0], center[1], r, Math.PI/2, Math.PI/2+(Math.PI-phi), false);
-                self.ctx.stroke();
+                if(r==Infinity){
+                    var center = math.complex(0, -self.Z0.im/self.Z0.re)
+                    var inf = math.complex(1,0)
 
-                z = self.impToCart(0,-value)
-                phi = z.toPolar().phi
-                center = self.cartToWin(math.complex(1, math.tan(phi/2)))
-                r = - self.cartToWin(math.complex(1, 0))[1] + center[1]
+                    self.ctx.beginPath();
+                    c = self.cartToWin(center)
+                    i = self.cartToWin(inf)
+                    self.ctx.moveTo(c[0]-(i[0]-c[0]), c[1]-(i[1]-c[1]));
+                    self.ctx.lineTo(c[0]+(i[0]-c[0]), c[1]+(i[1]-c[1]));
+                    self.ctx.stroke();
 
-                self.ctx.beginPath();
-                self.ctx.arc(center[0], center[1], r, -Math.PI/2, Math.PI/2-(phi), true);
-                self.ctx.stroke();
+                }else{
+                    phi_start = math.complex(self.Z0.re, -self.Z0.im).toPolar().phi
+                    phi_end = self.impToCart(0,value).add(0, +self.Z0.im/self.Z0.re).toPolar().phi
+
+                    self.ctx.beginPath();
+                    if(value + self.Z0.im > 0){
+                        if(value > 0){
+                            self.ctx.arc(x, y, r, Math.PI*0.5 + phi_start, 1.5 * math.pi - phi_end , false);
+                        }else{
+                            self.ctx.arc(x, y, r, Math.PI*0.5 + phi_start, -.5 * math.pi - phi_end , false);
+                        }
+                    }else{
+                        if(value > 0){
+                            self.ctx.arc(x, y, r, 1.5*Math.PI + phi_start, 2.5 * math.pi - phi_end , true);
+                        }else{
+                            self.ctx.arc(x, y, r, 1.5*Math.PI + phi_start, .5 * math.pi - phi_end , true);
+                        }
+                    }
+                    self.ctx.stroke();
+                }
             });
 
             self.ctx.lineWidth = 1
