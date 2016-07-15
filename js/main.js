@@ -144,6 +144,8 @@ function updateSmithChartData(){
 
     smith.points2 = pImp2
     smith.tracks2 = pTrack2
+
+    smith.Z0 = math.complex(pImp2[pImp2.length-1].re, -pImp2[pImp2.length-1].im)
 }
 
 function getUnitFactor(obj){
@@ -301,9 +303,36 @@ function onElementItemAdded(obj, type){
 }
 
 function makeTextBoxControllable(textbox,callback){
-        var cb = callback
 
-        $(textbox).unbind()
+    $(textbox).unbind()
+    if($(textbox).hasClass("im")){
+        $(textbox).keydown(function(e){
+            if(e.which==38){
+                //up
+                var val = parseFloat($(textbox).val())
+                if(val > 0){
+                    var ret = (val+1) * 1.1
+                }else{
+                    var ret = (val+1) / 1.1
+                }
+                $(textbox).val(ret.toPrecision(3))
+            }else if(e.which==40){
+                //down
+                var val = parseFloat($(textbox).val())
+                if(val > 0){
+                    var ret = (val-1) / 1.1
+                }else{
+                    var ret = (val-1) * 1.1
+                }
+                $(textbox).val(ret.toPrecision(3))
+            }else if(e.which==13){
+                //enter
+            }else{
+                return
+            }
+            callback()
+        })
+    }else{
         $(textbox).keydown(function(e){
             if(e.which==38){
                 //up
@@ -319,6 +348,7 @@ function makeTextBoxControllable(textbox,callback){
                 return
             }
 
-            cb()
+            callback()
         })
+    }
 }

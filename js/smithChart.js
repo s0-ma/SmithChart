@@ -24,18 +24,18 @@ function SmithChart(canvas){
     //displaySetting
     self.chart_r = 200
     self.center_x = 225
-    self.center_y = 205
+    self.center_y = 225
 
     //setting
     self.showQ = false;
     self.showImpedanceChart = true;
-    self.showAdmittanceChart = false;
-    self.showQualityFactor = false;
+    self.showAdmittanceChart = true;
+    self.showQualityFactor = true;
     self.showTrack = true;
 
-    self.Z0 = math.complex(50,20)
+    self.Z0 = math.complex(50,0)
     self.tics_re = [0, 12.5, 25, 50, 100, 200]
-    self.tics_im = [-200, -100, -50, -12.5, 0, 12.5, 25, 50, 100, 200]
+    self.tics_im = [-200, -100, -50, -25, -12.5, 0, 12.5, 25, 50, 100, 200]
     self.tics_q = [1,2,5,10]
 
     //drawnObj
@@ -53,13 +53,17 @@ function SmithChart(canvas){
     }
 
     self.cartToWin = function(z){
-        var x = z.re  *self.chart_r + self.center_x
-        var y = -z.im *self.chart_r + self.center_y
+        _r = math.sqrt(self.Z0.re*self.Z0.re+self.Z0.im*self.Z0.im)/self.Z0.re
+
+        var x = z.re  *self.chart_r/_r + self.center_x
+        var y = (-z.im - self.Z0.im/self.Z0.re)  *self.chart_r/_r + self.center_y
         return [x,y]
     }
 
     self.winToCart = function(x,y){
-        var ret = math.complex((x-self.center_x)/(self.chart_r), (y-self.center_y)/(-self.chart_r))
+        _r = math.sqrt(self.Z0.re*self.Z0.re+self.Z0.im*self.Z0.im)/self.Z0.re
+
+        var ret = math.complex((x-self.center_x)/(self.chart_r/_r), - ((y-self.center_y)/(self.chart_r/_r) + self.Z0.im/self.Z0.re))
         return ret;
     }
 
@@ -71,26 +75,35 @@ function SmithChart(canvas){
 
     self.drawSmithChart = function(){
 
+        //gamma-axis
+        _r = math.sqrt(self.Z0.re*self.Z0.re+self.Z0.im*self.Z0.im)/self.Z0.re
+        _x = 0
+        _y = self.Z0.im/self.Z0.re
+        r = self.cartToWin(math.complex(_r, 0))[0] - self.cartToWin(math.complex(0, 0))[0]
+        x = self.cartToWin(math.complex(_x ,0))[0]
+        y = self.cartToWin(math.complex(0, -_y))[1]
+
+        self.ctx.lineWidth = 1
+        self.ctx.strokeStyle = 'rgb(0,0,0)'
+        self.ctx.beginPath();
+        self.ctx.moveTo(x-r,y);
+        self.ctx.lineTo(x+r,y);
+        self.ctx.moveTo(x,y-r);
+        self.ctx.lineTo(x,y+r);
+        self.ctx.stroke();
+        self.ctx.lineWidth = 0.3
+
+        //外周円
+        self.ctx.lineWidth = 1
+        self.ctx.strokeStyle = 'rgb(0,0,0)'
+        self.ctx.beginPath();
+        self.ctx.arc(x, y, r, 0, Math.PI*2, false);
+        self.ctx.stroke();
+        self.ctx.lineWidth = 0.3
+
         if(self.showImpedanceChart){
             self.ctx.lineWidth = .3
-
-            //gamma-axis
-            _r = math.sqrt(self.Z0.re*self.Z0.re+self.Z0.im*self.Z0.im)/self.Z0.re
-            _x = 0
-            _y = self.Z0.im/self.Z0.re
-            r = self.cartToWin(math.complex(_r, 0))[0] - self.cartToWin(math.complex(0, 0))[0]
-            x = self.cartToWin(math.complex(_x ,0))[0]
-            y = self.cartToWin(math.complex(0, -_y))[1]
-
-            self.ctx.lineWidth = 1
-            self.ctx.beginPath();
-            self.ctx.moveTo(x-r,y);
-            self.ctx.lineTo(x+r,y);
-            self.ctx.moveTo(x,y-r);
-            self.ctx.lineTo(x,y+r);
-            self.ctx.stroke();
-            self.ctx.lineWidth = 0.3
-
+            self.ctx.strokeStyle = 'rgb(255,0,0)'
 
             //real part = const.
             self.tics_re.forEach(function(value){
@@ -101,13 +114,7 @@ function SmithChart(canvas){
                 x = self.cartToWin(math.complex(_x ,0))[0]
                 y = self.cartToWin(math.complex(0, -_y))[1]
 
-                if(value == 0){
-                    self.ctx.lineWidth = 1
-                    self.ctx.beginPath();
-                    self.ctx.arc(x, y, r, 0, Math.PI*2, false);
-                    self.ctx.stroke();
-                    self.ctx.lineWidth = 0.3
-                }else{
+                if(value != 0){
                     self.ctx.beginPath();
                     self.ctx.arc(x, y, r, 0, Math.PI*2, false);
                     self.ctx.stroke();
@@ -162,34 +169,61 @@ function SmithChart(canvas){
 
         if(self.showAdmittanceChart){
             self.ctx.lineWidth = .3
+            self.ctx.strokeStyle = 'rgb(0,255,0)'
 
+            //real part = const.
             self.tics_re.forEach(function(value){
-                l = self.cartToWin(math.complex(-1,0))[0]
-                r = self.cartToWin(self.impToCart(value,0))[0]
-                y = self.cartToWin(self.impToCart(0,0))[1]
-                self.ctx.beginPath();
-                self.ctx.arc((r+l)/2, y, (r-l)/2, 0, Math.PI*2, false);
-                self.ctx.stroke();
+
+                value = self.Z0.re*self.Z0.re / value
+
+                _r = math.sqrt(self.Z0.re*self.Z0.re+self.Z0.im*self.Z0.im)/(value+self.Z0.re)
+                _x = -value/(value+self.Z0.re)
+                _y = self.Z0.im/(value+self.Z0.re)
+                r = self.cartToWin(math.complex(_r, 0))[0] - self.cartToWin(math.complex(0, 0))[0]
+                x = self.cartToWin(math.complex(_x ,0))[0]
+                y = self.cartToWin(math.complex(0, -_y))[1]
+
+                if(value != 0){
+                    self.ctx.beginPath();
+                    self.ctx.arc(x, y, r, 0, Math.PI*2, false);
+                    self.ctx.stroke();
+                }
+
             })
 
+            //imaginary part = const.
             self.tics_im.forEach(function(value){
-                z = self.impToCart(0,value)
-                phi = z.toPolar().phi
-                center = self.cartToWin(math.complex(-1, math.tan(phi/2)))
-                r = self.cartToWin(math.complex(1, 0))[1] - center[1]
+                value = self.Z0.abs()*self.Z0.abs() / value
+                _r = math.sqrt(self.Z0.re*self.Z0.re+self.Z0.im*self.Z0.im)/(value+self.Z0.im)
+                _x = - value/(value+self.Z0.im)
+                _y = -self.Z0.re/(value+self.Z0.im)
+                r = math.abs(self.cartToWin(math.complex(_r, 0))[0] - self.cartToWin(math.complex(0, 0))[0])
+                x = self.cartToWin(math.complex(_x ,0))[0]
+                y = self.cartToWin(math.complex(0, -_y))[1]
 
-                self.ctx.beginPath();
-                self.ctx.arc(center[0], center[1], r, Math.PI/2, Math.PI/2-(Math.PI-phi), true);
-                self.ctx.stroke();
+                if(r==Infinity){
+                    var center = math.complex(0, -self.Z0.im/self.Z0.re)
+                    var inf = math.complex(1,0)
 
-                z = self.impToCart(0,-value)
-                phi = z.toPolar().phi
-                center = self.cartToWin(math.complex(-1, math.tan(phi/2)))
-                r = - self.cartToWin(math.complex(1, 0))[1] + center[1]
+                    self.ctx.beginPath();
+                    c = self.cartToWin(center)
+                    i = self.cartToWin(inf)
+                    self.ctx.moveTo(c[0]-(i[0]-c[0]), c[1]-(i[1]-c[1]));
+                    self.ctx.lineTo(c[0]+(i[0]-c[0]), c[1]+(i[1]-c[1]));
+                    self.ctx.stroke();
 
-                self.ctx.beginPath();
-                self.ctx.arc(center[0], center[1], r, -Math.PI/2, Math.PI/2+(phi), false);
-                self.ctx.stroke();
+                }else{
+                    phi_start = -math.complex(self.Z0.re, -self.Z0.im).toPolar().phi
+                    phi_end = 2*math.pi - self.impToCart(0,value).add(0, +self.Z0.im/self.Z0.re).toPolar().phi 
+
+                    self.ctx.beginPath();
+                    if(value + self.Z0.im > 0){
+                            self.ctx.arc(x, y, r, -1.5*Math.PI + phi_start, 1.5 * math.pi - phi_end , true);
+                    }else{
+                            self.ctx.arc(x, y, r, -.5*Math.PI + phi_start, .5 * math.pi - phi_end , false);
+                    }
+                    self.ctx.stroke();
+                }
             });
 
             self.ctx.lineWidth = 1
@@ -197,20 +231,60 @@ function SmithChart(canvas){
 
         if(self.showQualityFactor){
             self.ctx.lineWidth = .3
+            self.ctx.strokeStyle = 'rgb(0,0,255)'
 
             self.tics_q.forEach(function(value){
-                x = self.cartToWin(math.complex(0,-1/value))[0]
-                y = self.cartToWin(math.complex(0,-1/value))[1]
-                tmp = self.cartToWin(math.complex(-1,0))
-                r = math.sqrt(math.pow(tmp[0]-x,2) + math.pow(tmp[1]-y, 2))
-                phi = math.atan(value)
-                console.log(x,y,r)
-                self.ctx.beginPath();
-                self.ctx.arc(x, y, r, -(Math.PI/2 - phi), -(Math.PI/2+phi), true);
+                value = -1/value
 
-                x = self.cartToWin(math.complex(0,1/value))[0]
-                y = self.cartToWin(math.complex(0,1/value))[1]
-                self.ctx.arc(x, y, r, (Math.PI/2 - phi), (Math.PI/2+phi), false);
+                //+側
+                _x = 0
+                _y = (self.Z0.re * value - self.Z0.im)/(self.Z0.re + self.Z0.im * value )
+                _r = math.sqrt(1+_y*_y)
+                r = math.abs(self.cartToWin(math.complex(_r, 0))[0] - self.cartToWin(math.complex(0, 0))[0])
+                x = self.cartToWin(math.complex(_x ,_y))[0]
+                y = self.cartToWin(math.complex(_y, _y))[1]
+                phi_start = math.complex(_y,-1).toPolar().phi
+                phi_end = math.complex(_y,1).toPolar().phi
+                self.ctx.beginPath();
+                if(self.Z0.re/self.Z0.im > -value){
+                    if(self.Z0.im > 0){
+                        self.ctx.arc(x, y, r, 0.5*math.pi + phi_start, 0.5*math.pi + phi_end , true);
+                    }else{
+                        self.ctx.arc(x, y, r, 0.5*math.pi + phi_start, 0.5*math.pi + phi_end , false);
+                    }
+                }else{
+                    if(self.Z0.im > 0){
+                        self.ctx.arc(x, y, r, 0.5*math.pi + phi_start, 0.5*math.pi + phi_end , false);
+                    }else{
+                        self.ctx.arc(x, y, r, 0.5*math.pi + phi_start, 0.5*math.pi + phi_end , true);
+                    }
+                }
+                self.ctx.stroke();
+
+                //-側
+                value = -value
+                _x = 0
+                _y = (self.Z0.re * value - self.Z0.im)/(self.Z0.re + self.Z0.im * value )
+                _r = math.sqrt(1+_y*_y)
+                r = math.abs(self.cartToWin(math.complex(_r, 0))[0] - self.cartToWin(math.complex(0, 0))[0])
+                x = self.cartToWin(math.complex(_x ,_y))[0]
+                y = self.cartToWin(math.complex(_y, _y))[1]
+                phi_start = math.complex(_y,-1).toPolar().phi
+                phi_end = math.complex(_y,1).toPolar().phi
+                self.ctx.beginPath();
+                if(self.Z0.re/self.Z0.im > -value){
+                    if(self.Z0.im > 0){
+                        self.ctx.arc(x, y, r, 0.5*math.pi + phi_start, 0.5*math.pi + phi_end , false);
+                    }else{
+                        self.ctx.arc(x, y, r, 0.5*math.pi + phi_start, 0.5*math.pi + phi_end , true);
+                    }
+                }else{
+                    if(self.Z0.im > 0){
+                        self.ctx.arc(x, y, r, 0.5*math.pi + phi_start, 0.5*math.pi + phi_end , true);
+                    }else{
+                        self.ctx.arc(x, y, r, 0.5*math.pi + phi_start, 0.5*math.pi + phi_end , false);
+                    }
+                }
                 self.ctx.stroke();
             })
 
