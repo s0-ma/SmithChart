@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="Keywords" content="smith, chart, software, tool, calculation, simulation"/>
+        <meta name="description" content="On-line Smith chart software." />
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Smith Chart Calc</title>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+        <script src="js/math.min.js"></script>
+
+        <script src="js/main.js"></script>
+        <script src="js/calculator.js"></script>
+        <script src="js/smithChart.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/smithChart.css">
+
+    </head>
+
+    <body>
+        <!-- Static navbar -->
+        <nav class="navbar navbar-default navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Smith Chart Calc</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="index.html">Home</a></li>
+                    <li class="active"><a href="">How to use</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://github.com/s0-ma/SmithChart">GitHub</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+        </nav>
+
+        <div class="container theme-showcase" role="main">
+            <img src="https://chart.googleapis.com/chart?cht=tx&chl=
+            \frac{Z}{Z_0} = \frac{1-\Gamma}{1%2B\Gamma} \\ \\
+            Z = R %2B jX \\
+            Z_0 = R_0 %2B jX_0 \\
+            \Gamma = \Gamma_r %2B j\Gamma_x \\
+            Q = \|\frac{X}{R}\|
+            "> </br>
+            <img src="https://chart.googleapis.com/chart?cht=tx&chl=
+            (\Gamma_r-\frac{R}{R%2BR_0})^2%2B(\Gamma_x-\frac{X_0}{R%2BR_0})^2=\(\frac{\sqrt{R_0^2%2BX_0^2}}{R%2BR_0}\)^2\\
+            "></br>
+            <img src="https://chart.googleapis.com/chart?cht=tx&chl=
+            (\Gamma_r-\frac{X}{X%2BX_0})^2%2B(\Gamma_x-\frac{-X_0}{X%2BX_0})^2=\(\frac{\sqrt{R_0^2%2BX_0^2}}{X%2BX_0}\)^2
+            "> </br>
+            <img src="https://chart.googleapis.com/chart?cht=tx&chl=
+            \Gamma_r^2 %2B \(\Gamma_x - \frac{R_0\pm X_0Q}{\pm R_0Q -X_0}\)^2 = \(\sqrt{1%2B\(\frac{R_0\pm X_0Q}{\pm R_0Q -X_0}\)^2}\)^2
+            "> </br>
+        </div>
+    </body>
+
+</html>
