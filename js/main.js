@@ -54,7 +54,7 @@ function updateSmithChartData(){
             break;
         }
 
-        if(type.startsWith("cap") || type.startsWith("ind")){
+        if(type.indexOf("cap")===0 || type.indexOf("ind")===0){
             var val = $(elements.children[i]).children(".parameter").children("input").val()
             val = val * getUnitFactor($(elements.children[i]).children(".parameter"))
 
@@ -72,7 +72,7 @@ function updateSmithChartData(){
                 pTrack1.push(ELEMENT[(""+type).toUpperCase()])
             }
 
-        }else if(type.startsWith("tl")){
+        }else if(type.indexOf("tl")===0){
             var tmp = $(elements.children[i]).children(".parameter").children("input")
             var imp = math.complex($(tmp[0]).val(), 0)
             var phase = $(tmp[1]).val()
@@ -102,7 +102,7 @@ function updateSmithChartData(){
             break
         }
 
-        if(type.startsWith("cap") || type.startsWith("ind")){
+        if(type.indexOf("cap")===0 || type.indexOf("ind")===0){
             var val = $(elements.children[i]).children(".parameter").children("input").val()
             val = val * getUnitFactor($(elements.children[i]).children(".parameter"))
 
@@ -121,7 +121,7 @@ function updateSmithChartData(){
                 pTrack2.push(ELEMENT[("CAP_PARA").toUpperCase()])
             }
 
-        }else if(type.startsWith("tl")){
+        }else if(type.indexOf("tl")===0){
             var tmp = $(elements.children[i]).children(".parameter").children("input")
             var imp = math.complex($(tmp[0]).val(), 0)
             var phase = $(tmp[1]).val()
